@@ -1,0 +1,48 @@
+truthtster steps:-
+-------------------
+Note:
+1.Truthtester functions needs to be called inside async function as it has to waits for the result from the server.
+2.Appropriate parrameter should be provided.
+3.All the domain ,resolution pattern and truthstatement should be created at https://truthserver-b6017.web.app/  for comparison.
+
+
+step 1
+.......
+
+ await truthtester.starttest(
+      "domain name",
+      "resolution pattern name",
+      "owner email"
+    );
+
+example:-
+
+await truthtester.starttest(
+      "login app",
+      "login success",
+      "chitabiswal4@gmail.com"
+    );
+
+step 2
+......
+
+  await truthtester.steptest({
+        "first truth statement",
+      });
+example:-
+ await truthtester.steptest({
+        "valid email": "user@gmail.com",
+      });
+note:-
+1.truthstatement can be a simple string or valid key value json like {key:value}.
+2.there can be multiple truthstatement user can write.
+
+step 3
+........
+
+const result= await truthtester.endtest();
+console.log(result)
+
+ Note:
+1.After defining all the truthstatement we have to call endtest,which will compare the expectaion
+and recieved truthstatement and return the result.

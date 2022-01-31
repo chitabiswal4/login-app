@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import truthtester from "truthtester";
 import "bootstrap/dist/css/bootstrap.min.css";
+
 const LoginPage = () => {
   const re =
     /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -11,55 +12,29 @@ const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const res = await truthtester(
-      "login app",
-      "starttest",
+    const res = await truthtester.starttest(
+      "login apps",
       "login success",
-      "619639e2a2f15b4a64072f25"
+      "chitabiswal4@gmail.com"
     );
-    console.log(res);
-    if (re.test(email)) {
-      const res2 = await truthtester(
-        "login app",
-        "steptest",
-        "login success",
-        "619639e2a2f15b4a64072f25",
-        "correct password"
-      );
-      if (password === "123456") {
-        const res2 = await truthtester(
-          "login app",
-          "steptest",
-          "login success",
-          "619639e2a2f15b4a64072f25",
-          "valid email"
-        );
-        console.log(res2);
-        const res3 = await truthtester(
-          "login app",
-          "steptest",
-          "login success",
-          "619639e2a2f15b4a64072f25",
-          "successfully logedin"
-        );
-        console.log(res3);
-        const res4 = await truthtester(
-          "login app",
-          "endtest",
-          "login success",
-          "619639e2a2f15b4a64072f25"
-        );
-        console.log(res4);
 
+    if (re.test(email)) {
+      const res2 = await truthtester.steptest({
+        "valid email": email,
+      });
+
+      if (password === "123456") {
+        const res2 = await truthtester.steptest({
+          "correct password": password,
+        });
+
+        const res3 = await truthtester.steptest("login successfull");
+        const res5 = await truthtester.endtest();
+        console.log(res5);
+
+        // console.log(res6);
         const obj = { email: email, password: password };
         alert(JSON.stringify(obj));
-        const res5 = await truthtester(
-          "login app",
-          "cleantest",
-          "login success",
-          "619639e2a2f15b4a64072f25"
-        );
-        console.log(res5);
       } else {
         alert("password incorrect!");
       }
