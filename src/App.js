@@ -12,31 +12,46 @@ const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const res = await truthtester.starttest(
-      "login apps",
-      "login success",
-      "chitabiswal4@gmail.com"
+    await truthtester.starttest(
+      "login app",
+      "chitabiswal4@gmail.com",
+      true,
+      "login success"
     );
 
     if (re.test(email)) {
-      const res2 = await truthtester.steptest({
+      await truthtester.steptest({
         "valid email": email,
       });
 
       if (password === "123456") {
-        const res2 = await truthtester.steptest({
+        await truthtester.steptest({
           "correct password": password,
         });
+        await truthtester.steptest(
+          `password must be ${password.length} charcter`,
+          "password streanth check"
+        );
 
-        const res3 = await truthtester.steptest("login successfull");
+        await truthtester.steptest("login successfull", "login success");
+
+        // test2
+        await truthtester.setResolutionPattern("login failure");
+        await truthtester.steptest({
+          "wrog password": password,
+        });
+        await truthtester.steptest("login failed");
+
         const res5 = await truthtester.endtest();
         console.log(res5);
-
-        // console.log(res6);
         const obj = { email: email, password: password };
         alert(JSON.stringify(obj));
       } else {
-        alert("password incorrect!");
+        await truthtester.setResolutionPattern("login failure");
+        await truthtester.steptest({
+          "wrong password": password,
+        });
+        await truthtester.steptest("login failed");
       }
     }
   };
