@@ -1,48 +1,128 @@
-truthtster steps:-
--------------------
-Note:
-1.Truthtester functions needs to be called inside async function as it has to waits for the result from the server.
-2.Appropriate parrameter should be provided.
-3.All the domain ,resolution pattern and truthstatement should be created at https://truthserver-b6017.web.app/  for comparison.
+Truthtester :-
 
+steps:
+truthtester has 3 steps 
+ 1.starttest
+ 2.steptest
+ 3.endtest
 
-step 1
-.......
+starttest:-
+ starttest syntax:-
+ 
+ await truthtester.starttest("domain name","userid(email)",true or false(test),"reasolution pattern(optional)")
 
- await truthtester.starttest(
-      "domain name",
-      "resolution pattern name",
-      "owner email"
-    );
+steptest:-
+steptest syntax:-
 
-example:-
+await truthtester.steptest("truthstatement","reasolution pattern(optional)")
 
-await truthtester.starttest(
-      "login app",
-      "login success",
-      "chitabiswal4@gmail.com"
-    );
+endtest:-
+endtest syntax:-
 
-step 2
-......
-
-  await truthtester.steptest({
-        "first truth statement",
-      });
-example:-
- await truthtester.steptest({
-        "valid email": "user@gmail.com",
-      });
-note:-
-1.truthstatement can be a simple string or valid key value json like {key:value}.
-2.there can be multiple truthstatement user can write.
-
-step 3
-........
-
-const result= await truthtester.endtest();
+const result=await truthtester.endtest()
 console.log(result)
 
- Note:
-1.After defining all the truthstatement we have to call endtest,which will compare the expectaion
-and recieved truthstatement and return the result.
+Rules for passing resolution pattern:
+ 1.directly pass resolution pattern as 4th parameter in starttest
+ e.g:- await truthtester.starttest("domain name","userid(email)",true or false(test),"reasolution pattern")
+ 2.directly pass resolution pattern as 2nd parameter in step test
+ e.g:-await truthtester.steptest("truthstatement","reasolution pattern")
+ 3.using setResolutionPattern
+ e.g:-
+ await truthtester.setResolutionPattern("reasolution pattern")
+
+Notes:-
+We can setup one or multiple tests at a time.
+
+for one test at a time:-
+example:-
+ test scenario
+...............
+ domain name:-login app
+
+ resolution pattern name:-login success
+ truthstatement:-["valid email=biswalc662@gmail.com","correct password=12345678","login successfull"]
+
+test code:
+..........
+
+ await truthtester.starttest(
+      "login app",
+      "chitabiswal4@gmail.com",
+       true,
+      "login success"
+    );
+
+
+ await truthtester.steptest({
+        "valid email": biswalc662@gmail.com,
+      });
+
+
+ await truthtester.steptest({
+          "correct password": "12345678",
+        });
+
+ await truthtester.steptest("login successfull");
+
+
+ const result = await truthtester.endtest();
+ console.log(result);
+
+for multiple test at a time:-
+
+test scenario
+...............
+ domain name:-login app
+
+test case1:-
+ resolution pattern name:-login success
+ truthstatement:-["valid email=biswalc662@gmail.com","correct password=12345678","login successfull"]
+test case2:-
+ resolution pattern name:-login failure
+ truthstatement:-["wrong password","login failed"]
+test case3:-
+ resolution pattern name:-password streanth check
+ truthstatement:-["password must be 8 character"]
+
+test code
+.........
+//test case 2 (resolution pattern=login success)
+await truthtester.starttest(
+      "login app",
+      "chitabiswal4@gmail.com",
+       true,
+      "login success"
+    );
+
+
+ await truthtester.steptest({
+        "valid email": biswalc662@gmail.com,
+      });
+
+
+ await truthtester.steptest({
+          "correct password": "12345678",
+        });
+ //test case 3 (resolution pattern=password streanth check) using second Rules for passing resolution pattern
+ await truthtester.steptest(`password must be ${password.length} charcter`,"password streanth check" )
+
+
+
+ //test case 2 (resolution pattern=login success)
+ //passing 3rd parameter first test using second Rules for passing resolution pattern
+ await truthtester.steptest("login successfull","login success");
+
+ //test case 2 (resolution pattern=login failure)
+
+ await truthtester.setResolutionPattern("login failure");
+       
+ 
+ await truthtester.steptest({
+          "wrong password": password,
+        });
+ 
+ await truthtester.steptest("login failed");
+
+
+
